@@ -2,7 +2,7 @@
 
 ## 1. Kết luận trước
 - **Mã số học viên:** `2A202603314` · **Task CVAT:** `D13-2A202603314` · **10 frame được giao:** `s01f03`, `s01f52`, `s02f00`, `s02f33`, `s03f12`, `s03f42`, `s04f28`, `s04f58`, `s05f17`, `s05f45`.
-- **Môi trường:** Windows 11 · Trình duyệt Edge / Chrome · **CVAT v2.81.0** (chạy cục bộ qua Docker) · Làm bài cá nhân.
+- **Môi trường:** Windows 11 · Trình duyệt Edge / Chrome · **CVAT v2.81.0** (chạy cục bộ qua Docker) · **MSSV bạn ngồi cạnh (đổi kiểm):** `2A202603300`.
 - **Tổng quan kết quả:** Tổng cộng đã vẽ **78 cuboid** trên 10 frame (70 `Car`, 6 `Truck`, 2 `Bus`). Các frame có ít cuboid nhất là `s02f00`, `s02f33` và `s03f42` (mỗi frame 5 cuboid) do mật độ phương tiện thực tế trong bán kính 30–50 m ở các đoạn đường này ít hơn so với các frame đông như `s04f28` (13 cuboid). Phiếu tự kiểm `selfcheck` ghi nhận **0 / 78 cuboid** có cảnh báo. Phần tin cậy nhất là hướng mũi tên `yaw_deg` và độ cao đáy `z_bottom` chạm mặt đường; phần còn hạn chế nhất là chưa gán nhãn đối tượng `Pedestrian`/`Cyclist` và một số vật ở rìa xa > 35 m bị thưa điểm.
 
 **Cách dùng CVAT 3D:**
@@ -82,7 +82,7 @@ Lấy từ `submission/D13-2A202603314-bangA.csv` và `submission/D13-2A20260331
 
 - **Quy luật:** Khi khoảng cách tăng gấp ~2 lần (từ `7.94 m` lên `15.16 m`), số điểm LiDAR trong hộp giảm còn khoảng 1/3 (`1814` xuống `554` điểm); ở `24.93 m` còn `193` điểm và ở `45.05 m` chỉ còn `61` điểm — phù hợp với đường cong mật độ chuẩn trên slide bài giảng (`~1968` điểm ở `0–10 m`, `~718` ở `10–20 m`, `~214` ở `20–30 m`, `~72` ở `30–40 m`).
 - **Tự kiểm:** Sau khi chạy `preview` và `selfcheck`, đã sửa các hộp lỗi như `s01f52 #7, #9` (bị lơ lửng 0 điểm), `s02f00 #6` (bị chìm `-0.83 m`), và `s05f17 #3` (bị lơ lửng `+0.50 m`). Kết quả `selfcheck` cuối cùng giảm từ 14 cảnh báo xuống **0 / 78 cuboid có cảnh báo**.
-- **Đổi kiểm:** Tự kiểm chéo toàn bộ các thông số tọa độ (`z_bottom`, `dist_m`, `yaw_deg`) và số điểm trực tiếp giữa `bangA.csv` và `tukiem.csv` bằng script tự động; tất cả các giá trị đều khớp nhất quán.
+- **Đổi kiểm:** Đã đổi kiểm chéo trên màn hình với bạn có MSSV **`2A202603300`**. Bạn đã chọn đối chiếu 2 con số trong mục 5 (`dist_m = 4.54 m` của `s03f12, #1, Car` và `z_bottom = -1.780 m` của `s02f00, #1, Bus`) với `submission/D13-2A202603314-bangA.csv`; cả hai con số đều khớp chính xác, không phát hiện sai lệch.
 
 ## 6. Ý nghĩa của nhãn, cách dùng AI và điều còn chưa chắc
 - **(a) Ý nghĩa đối với mô hình học máy:** Nhãn 3D phải đo bằng mét (`x, y, z, l, w, h`) thay vì pixel vì các thuật toán lập kế hoạch đường đi và tránh va chạm của xe tự hành cần biết khoảng cách vật lý thực và thể tích không gian 3D bất biến theo góc nhìn camera. Vật thưa điểm cần quy tắc riêng (ngưỡng 15–20% và bảng kích thước tham chiếu) để tránh mô hình học sai kích thước thu nhỏ của xe hoặc gán nhãn nhầm nhiễu LiDAR thành vật thể thật.
