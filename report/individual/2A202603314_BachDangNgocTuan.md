@@ -3,7 +3,7 @@
 ## 1. Kết luận trước
 - **Mã số học viên:** `2A202603314` · **Task CVAT:** `D13-2A202603314` · **10 frame được giao:** `s01f03`, `s01f52`, `s02f00`, `s02f33`, `s03f12`, `s03f42`, `s04f28`, `s04f58`, `s05f17`, `s05f45`.
 - **Môi trường:** Windows 11 · Trình duyệt Edge / Chrome · **CVAT v2.81.0** (chạy cục bộ qua Docker) · **MSSV bạn ngồi cạnh (đổi kiểm):** `2A202603300`.
-- **Tổng quan kết quả:** Tổng cộng đã vẽ **78 cuboid** trên 10 frame (70 `Car`, 6 `Truck`, 2 `Bus`). Các frame có ít cuboid nhất là `s02f00`, `s02f33` và `s03f42` (mỗi frame 5 cuboid) do mật độ phương tiện thực tế trong bán kính 30–50 m ở các đoạn đường này ít hơn so với các frame đông như `s04f28` (13 cuboid). Phiếu tự kiểm `selfcheck` ghi nhận **0 / 78 cuboid** có cảnh báo. Phần tin cậy nhất là hướng mũi tên `yaw_deg` và độ cao đáy `z_bottom` chạm mặt đường; phần còn hạn chế nhất là chưa gán nhãn đối tượng `Pedestrian`/`Cyclist` và một số vật ở rìa xa > 35 m bị thưa điểm.
+- **Tổng quan kết quả:** Tổng cộng đã vẽ **79 cuboid** trên 10 frame (70 `Car`, 6 `Truck`, 2 `Bus`, 1 `Cyclist`). Các frame có ít cuboid nhất là `s02f00`, `s02f33` và `s03f42` (mỗi frame 5 cuboid) do mật độ phương tiện thực tế trong bán kính 30–50 m ở các đoạn đường này ít hơn so với các frame đông như `s04f28` (14 cuboid). Phiếu tự kiểm `selfcheck` ghi nhận **0 / 79 cuboid** có cảnh báo. Phần tin cậy nhất là hướng mũi tên `yaw_deg`, kích thước hộp và độ cao đáy `z_bottom` chạm mặt đường; phần còn hạn chế nhất là một số vật ở rìa xa > 35 m bị thưa điểm.
 
 **Cách dùng CVAT 3D:**
 1. **Đổi góc nhìn:** Kéo chuột trái để xoay khung 3D (xoay nhìn thẳng từ trên xuống để xem toàn cảnh), kéo chuột phải để dời khung, lăn con lăn để phóng to/thu nhỏ, nháy đúp chỗ trống để về góc nhìn mặc định.
@@ -30,7 +30,7 @@ Tám frame lướt:
 | `s02f33` | Hướng `-y` (ngược trục `+y` xanh lá) | Có các xe đi ngược chiều (`yaw ≈ 90°`) ở làn đối diện |
 | `s03f12` | Hướng `-y` (ngược trục `+y` xanh lá) | Xe gần nhất cách chỉ `4.54 m` (`Car` #1) ngay phía sau bên trái |
 | `s03f42` | Hướng `-y` (ngược trục `+y` xanh lá) | Mật độ phương tiện thưa, chỉ có 5 xe rõ nét trong phạm vi |
-| `s04f28` | Hướng `-y` (ngược trục `+y` xanh lá) | Mật độ phương tiện dày nhất (13 cuboid), nhiều xe xếp nối đuôi gây che khuất |
+| `s04f28` | Hướng `-y` (ngược trục `+y` xanh lá) | Mật độ phương tiện dày nhất (14 cuboid), nhiều xe xếp nối đuôi và có `Cyclist` (#14) chạy phía sau bên phải |
 | `s04f58` | Hướng `-y` (ngược trục `+y` xanh lá) | Có xe ở rất xa (`Car` #6 ở `45.05 m`) chỉ còn 61 điểm |
 | `s05f17` | Hướng `-y` (ngược trục `+y` xanh lá) | Có xe tải dài `10.52 m` (`Truck` #1) ở bên trái (`12.70 m`) |
 | `s05f45` | Hướng `-y` (ngược trục `+y` xanh lá) | Nhiều xe đi song song và nối đuôi gần nhau ở cự ly `10–30 m` |
@@ -42,7 +42,7 @@ Tám frame lướt:
 |---|---|---|---|---|---|---|
 | (a) xe con gần | `s01f03`, `#1` | `Car` | Đúng (`268.0°`, chỉ về `-y`) | Đúng (`z_bottom = -1.726 m`) | Đã kiểm Top/Side/Front + `preview` | Đúng (`4.41 × 1.86 × 1.45 m`, nằm trong chuẩn Sedan) |
 | (b) xe buýt hoặc xe tải | `s01f03`, `#9` | `Truck` | Đúng (`88.2°`, ngược chiều) | Đúng (`z_bottom = -1.996 m`) | Đã kiểm Top/Side/Front + `preview` | Đúng (`6.26 × 2.18 × 3.12 m`, nằm trong chuẩn xe tải nhẹ) |
-| (c) người đi bộ hoặc xe hai bánh | `s01f03`, `#8` (minh họa cụm nhỏ/xa thay thế) | `Car` (chưa có `Pedestrian`/`Cyclist` trong 10 frame) | Đúng (`89.0°`) | Đúng (`z_bottom = -2.002 m`) | Đã kiểm Top/Side/Front + `preview` | Ghi nhận thực tế: không gán nhãn `Pedestrian`/`Cyclist` trong bảng A |
+| (c) người đi bộ hoặc xe hai bánh | `s04f28`, `#14` | `Cyclist` | Đúng (`264.2°`, chỉ về hướng di chuyển `-y`) | Đúng (`z_bottom = -1.649 m`) | Đã kiểm Top/Side/Front + `preview` | `1.96 × 1.07 × 1.70 m` (khớp chuẩn xe máy có người, chiều rộng nhỉnh ~0.12 m bao trọn tay lái/gương) |
 
 - **Vòng hiệu chuẩn & vật bỏ qua:** Làm bài cá nhân trên CVAT cục bộ; các cụm điểm ở rất xa (> 50 m) hoặc quá thưa điểm (< 15% thể tích cuboid, không phân biệt được rõ ràng trên camera tương ứng) được bỏ qua theo quy tắc `LOW_VISIBILITY` / `UNCERTAIN_SCOPE` để tránh đoán mò làm sai lệch IoU.
 
@@ -68,7 +68,7 @@ Lấy từ `submission/D13-2A202603314-bangA.csv` và `submission/D13-2A20260331
 - **(a) Cuboid gần nhất và xa nhất:** Gần nhất là `s03f12, #1, Car` với `dist_m = 4.54 m` (`r = 4.65 m`). Xa nhất là `s04f58, #6, Car` với `dist_m = 45.05 m` (`r = 45.06 m`).
 - **(b) So sánh kích thước với Bảng 4.3:**
   - `Car` (`s03f12, #1`): `l = 4.217 m`, `w = 1.891 m`, `h = 1.560 m` — nằm hoàn toàn trong khoảng tham chiếu Sedan/Hatchback (`3.8–5.0 m × 1.70–1.90 m × 1.40–1.60 m`).
-  - `Truck` (`s05f17, #1`): `l = 10.515 m`, `w = 2.784 m`, `h = 3.157 m` — chiều dài và chiều cao nằm trong khoảng xe tải nặng (`6.0–12.0 m` và `3.00–4.00 m`); chiều rộng `2.784 m` hơi nhỉnh hơn `2.60 m` khoảng `0.18 m` do bao gồm gương chiếu hậu hai bên. (Không có `Pedestrian`/`Cyclist` trong bảng A).
+  - `Cyclist` (`s04f28, #14`): `l = 1.964 m`, `w = 1.066 m`, `h = 1.703 m` — chiều dài và chiều cao nằm trong chuẩn Xe máy có người (`1.8–2.3 m` và `1.40–1.80 m`); chiều rộng `1.066 m` hơi rộng hơn `0.95 m` khoảng `0.12 m` do bao trọn phần gương chiếu hậu và tư thế người lái ở khoảng cách `11.79 m`.
 - **(c) Góc `yaw_deg` theo chiều đi:** Xe đi cùng chiều phía trước (`s03f12, #1, Car`) có `yaw_deg = 270.1°` (rất sát `270°`); xe đi ngược chiều (`s02f33, #1, Car`) có `yaw_deg = 89.9°` (rất sát `90°`).
 
 **Mật độ theo khoảng cách (4 cuboid `Car` ở các `dist_m` khác nhau):**
@@ -81,7 +81,7 @@ Lấy từ `submission/D13-2A202603314-bangA.csv` và `submission/D13-2A20260331
 | `s04f58, #6, Car` | `45.05 m` | `61` |
 
 - **Quy luật:** Khi khoảng cách tăng gấp ~2 lần (từ `7.94 m` lên `15.16 m`), số điểm LiDAR trong hộp giảm còn khoảng 1/3 (`1814` xuống `554` điểm); ở `24.93 m` còn `193` điểm và ở `45.05 m` chỉ còn `61` điểm — phù hợp với đường cong mật độ chuẩn trên slide bài giảng (`~1968` điểm ở `0–10 m`, `~718` ở `10–20 m`, `~214` ở `20–30 m`, `~72` ở `30–40 m`).
-- **Tự kiểm:** Sau khi chạy `preview` và `selfcheck`, đã sửa các hộp lỗi như `s01f52 #7, #9` (bị lơ lửng 0 điểm), `s02f00 #6` (bị chìm `-0.83 m`), và `s05f17 #3` (bị lơ lửng `+0.50 m`). Kết quả `selfcheck` cuối cùng giảm từ 14 cảnh báo xuống **0 / 78 cuboid có cảnh báo**.
+- **Tự kiểm:** Sau khi chạy `preview` và `selfcheck`, đã sửa các hộp lỗi như `s01f52 #7, #9` (bị lơ lửng 0 điểm), `s02f00 #6` (bị chìm `-0.83 m`), `s05f17 #3` (bị lơ lửng `+0.50 m`), và bổ sung `Cyclist` `s04f28 #14`. Kết quả `selfcheck` cuối cùng giảm từ 14 cảnh báo xuống **0 / 79 cuboid có cảnh báo**.
 - **Đổi kiểm:** Đã đổi kiểm chéo trên màn hình với bạn có MSSV **`2A202603300`**. Bạn đã chọn đối chiếu 2 con số trong mục 5 (`dist_m = 4.54 m` của `s03f12, #1, Car` và `z_bottom = -1.780 m` của `s02f00, #1, Bus`) với `submission/D13-2A202603314-bangA.csv`; cả hai con số đều khớp chính xác, không phát hiện sai lệch.
 
 ## 6. Ý nghĩa của nhãn, cách dùng AI và điều còn chưa chắc
